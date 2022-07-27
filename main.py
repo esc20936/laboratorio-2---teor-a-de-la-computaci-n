@@ -4,7 +4,7 @@ import pandas as pd
 
 #lista de estados
 derivationList = []
-
+lastItems = {}
 
 # Función para obtener el estado resultante de una transición
 # param state: estado inicial
@@ -29,6 +29,8 @@ def getFinalState(state,word,transition_matrix):
         return state
     else:
         symbol =word[0]
+        lastItems['state'] = state
+        lastItems['symbol'] = symbol
         qq = transition(state,symbol,transition_matrix)
         derivationList.append(f"δ({state},{symbol}) -> {qq}")
         value = getFinalState(qq,word[1:],transition_matrix)
@@ -70,4 +72,8 @@ try:
     derivation()
 except:
     #Si falla es porque no esta definido a donde se debe mover en la matriz de transición, por lo que lo interpretamos como un error
+    derivationList.append(f"δ({lastItems['state']},{lastItems['symbol']}) -> Error")
+    derivationList.append(f"Error: No esta definido a donde se debe mover en la matriz de transiciones")
+    derivation()
+
     print("Cadena no aceptada")
